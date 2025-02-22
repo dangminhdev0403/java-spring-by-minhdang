@@ -1,6 +1,7 @@
 package com.vn.minh.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,14 @@ public class UserImpl implements UserService {
     @Override
     public void deleteUserById(long id) {
         this.userRepository.deleteById(id);
+    }
+
+    @Override
+    public User findUserById(long id) {
+        Optional<User> userOpt = this.userRepository.findById(id);
+        if (userOpt.isPresent())
+            return userOpt.get();
+        return null;
     }
 
 }

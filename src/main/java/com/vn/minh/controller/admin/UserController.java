@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vn.minh.domain.User;
 import com.vn.minh.domain.dto.UserDTO;
 import com.vn.minh.service.UserService;
+import com.vn.minh.service.util.error.MessageCustomExcetion;
 
 import lombok.AllArgsConstructor;
 
@@ -38,8 +40,13 @@ public class UserController {
         return ResponseEntity.created(null).body(saveUser);
     }
 
+   
     @PutMapping("/{id}")
-    public String putMethodName() {
+    public String updateUser(@PathVariable long id) throws MessageCustomExcetion {
+        User currentUser = this.userService.findUserById(id);
+        if (currentUser == null) {
+            throw new MessageCustomExcetion("Không tìm thấy user");
+        }
 
         return "ok";
     }

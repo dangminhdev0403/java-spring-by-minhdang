@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vn.minh.domain.User;
 import com.vn.minh.domain.dto.UserDTO;
+import com.vn.minh.domain.response.LoginRes;
 import com.vn.minh.service.UserService;
 import com.vn.minh.service.util.error.MessageCustomExcetion;
 
@@ -34,13 +34,14 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User> postMethodName(@RequestBody User user) {
+    public ResponseEntity<LoginRes> postMethodName(@RequestBody User user) {
         User saveUser = this.userService.saveUser(user);
+        LoginRes loginRes = LoginRes.builder().id(saveUser.getId()).name(saveUser.getName()).email(saveUser.getEmail())
+                .build();
 
-        return ResponseEntity.created(null).body(saveUser);
+        return ResponseEntity.created(null).body(loginRes);
     }
 
-   
     @PutMapping("/{id}")
     public String updateUser(@PathVariable long id) throws MessageCustomExcetion {
         User currentUser = this.userService.findUserById(id);

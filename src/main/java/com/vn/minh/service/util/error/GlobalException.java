@@ -2,6 +2,7 @@ package com.vn.minh.service.util.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -24,7 +25,6 @@ public class GlobalException {
         return res;
     }
 
-    @SuppressWarnings("unchecked")
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseData> ComonExcetion(Exception ex) {
 
@@ -39,7 +39,7 @@ public class GlobalException {
     }
 
     @ExceptionHandler(MessageCustomExcetion.class)
-    @SuppressWarnings("unchecked")
+
     public ResponseEntity<ResponseData> idException(MessageCustomExcetion ex) {
 
         int statusCode = HttpStatus.BAD_REQUEST.value();
@@ -53,7 +53,6 @@ public class GlobalException {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    @SuppressWarnings("unchecked")
 
     public ResponseEntity<ResponseData> notFoundException(NoResourceFoundException ex) {
         ResponseData res = new ResponseData();
@@ -63,7 +62,19 @@ public class GlobalException {
         String message = ex.getMessage();
         res.setMessage(message);
         res.setData(null);
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ResponseData> notFoundUserException(UsernameNotFoundException ex) {
+        ResponseData res = new ResponseData();
+        int statusCode = HttpStatus.NOT_FOUND.value();
+        res.setStatus(statusCode);
+        res.setError(("Thông tin người dùng không đúng"));
+        String message = ex.getMessage();
+        res.setMessage(message);
+        res.setData(null);
+        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
 
 }

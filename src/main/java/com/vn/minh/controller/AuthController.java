@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vn.minh.domain.User;
 import com.vn.minh.domain.request.LoginReq;
+import com.vn.minh.domain.response.ResLoginDTO;
 import com.vn.minh.service.UserService;
+import com.vn.minh.service.util.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,20 +23,35 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final UserService userService;
+    private final SecurityUtils securityUtils;
 
-    private final AuthenticationManagerBuilder authenticationManager;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
     @PostMapping("/login")
-    public ResponseEntity<LoginReq> login(@RequestBody LoginReq loginReq) {
+    public ResponseEntity<ResLoginDTO> login(@RequestBody LoginReq loginReq) {
 
-        String emailLogin = loginReq.getEmail();
-        String passwordLogin = loginReq.getPassword();
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                loginReq.getEmail(), loginReq.getPassword());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        //! nạp vào  Spring Security để tái sự dụng thông tin người đăng nhập
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(emailLogin,
-                passwordLogin);
+        User currentUser = this.userService.findByUsername(loginReq.getEmail());
 
-        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        return ResponseEntity.ok().body(loginReq);
+        ResLoginDTO resLoginDTO = new ResLoginDTO();
+
+        if (currentUser != null) {
+
+            String email = currentUser.getEmail();
+            String name = currentUser.getName();
+
+            ResLoginDTO.UserLogin userLogin = ResLoginDTO.UserLogin.builder().email(email).name(name).build();
+
+            String accessToken = this.securityUtils.createAccessToken(email, userLogin);
+
+            resLoginDTO.setAccessToken(accessToken);
+            resLoginDTO.setUser(userLogin);
+
+        }
+
+        return ResponseEntity.ok().body(resLoginDTO);
     }
-
 }

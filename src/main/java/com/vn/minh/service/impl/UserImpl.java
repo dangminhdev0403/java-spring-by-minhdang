@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,11 +57,12 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws UsernameNotFoundException {
         User loginUser = new User();
         if (isValidEmail(username)) {
             Optional<User> optional = this.userRepository.findByEmail(username);
             loginUser = optional.isPresent() ? optional.get() : null;
+            
 
         }
         return loginUser;

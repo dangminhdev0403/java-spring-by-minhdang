@@ -3,6 +3,7 @@ package com.vn.minh.service.util.error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -71,6 +72,31 @@ public class GlobalException {
         int statusCode = HttpStatus.NOT_FOUND.value();
         res.setStatus(statusCode);
         res.setError(("Thông tin người dùng không đúng"));
+        String message = ex.getMessage();
+        res.setMessage(message);
+        res.setData(null);
+        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ResponseData> notFoundUserException(NullPointerException ex) {
+        ResponseData res = new ResponseData();
+        int statusCode = HttpStatus.BAD_REQUEST.value();
+        res.setStatus(statusCode);
+        res.setError(("Người dùng không tồn tại"));
+        String message = "Phải nạp đúng người dùng tồn tại ";
+        res.setMessage(message);
+        res.setData(null);
+        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+    }
+    
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ResponseData> notFoundUserException(HttpRequestMethodNotSupportedException ex) {
+        ResponseData res = new ResponseData();
+        int statusCode = HttpStatus.BAD_REQUEST.value();
+        res.setStatus(statusCode);
+        res.setError(("Phương thức sử dụng không "));
         String message = ex.getMessage();
         res.setMessage(message);
         res.setData(null);

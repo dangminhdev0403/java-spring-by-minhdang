@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vn.minh.domain.User;
 import com.vn.minh.domain.dto.UserDTO;
-import com.vn.minh.domain.response.LoginRes;
 import com.vn.minh.service.UserService;
 import com.vn.minh.service.util.error.MessageCustomExcetion;
 
@@ -33,14 +32,14 @@ public class UserController {
         return ResponseEntity.ok().body(listUsers);
     }
 
-    @PostMapping("")
-    public ResponseEntity<LoginRes> postMethodName(@RequestBody User user) {
-        User saveUser = this.userService.saveUser(user);
-        LoginRes loginRes = LoginRes.builder().id(saveUser.getId()).name(saveUser.getName()).email(saveUser.getEmail())
-                .build();
+    // @PostMapping("")
+    // public ResponseEntity<LoginRes> postMethodName(@RequestBody User user) {
+    //     User saveUser = this.userService.saveUser(user);
+    //     LoginRes loginRes = LoginRes.builder().id(saveUser.getId()).name(saveUser.getName()).email(saveUser.getEmail())
+    //             .build();
 
-        return ResponseEntity.created(null).body(loginRes);
-    }
+    //     return ResponseEntity.created(null).body(loginRes);
+    // }
 
     @PutMapping("/{id}")
     public String updateUser(@PathVariable long id) throws MessageCustomExcetion {

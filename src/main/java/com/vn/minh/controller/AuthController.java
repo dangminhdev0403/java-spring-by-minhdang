@@ -36,8 +36,9 @@ public class AuthController {
 
         User currentUser = this.userService.findByUsername(loginReq.getEmail());
 
-        ResLoginDTO resLoginDTO = new ResLoginDTO();
-
+        // Khởi tạo với giá trị mặc định
+        ResLoginDTO resLoginDTO = ResLoginDTO.builder().build();
+        
         if (currentUser != null) {
 
             String email = currentUser.getEmail();
@@ -47,8 +48,10 @@ public class AuthController {
 
             String accessToken = this.securityUtils.createAccessToken(email, userLogin);
 
-            resLoginDTO.setAccessToken(accessToken);
-            resLoginDTO.setUser(userLogin);
+            resLoginDTO = ResLoginDTO.builder()
+                    .accessToken(accessToken)
+                    .user(userLogin)
+                    .build();
 
         }
 

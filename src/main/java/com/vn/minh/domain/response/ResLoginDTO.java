@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-@NoArgsConstructor
+@Builder
 public class ResLoginDTO {
 
     @JsonProperty("access_token")
@@ -21,7 +20,7 @@ public class ResLoginDTO {
     @Setter
     @Builder
     public static class UserLogin {
-     
+
         private String name;
         private String email;
     }

@@ -87,7 +87,7 @@ public class GlobalException {
         String message = "Phải nạp đúng người dùng tồn tại ";
         res.setMessage(message);
         res.setData(null);
-        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
     
 
@@ -100,7 +100,7 @@ public class GlobalException {
         String message = ex.getMessage();
         res.setMessage(message);
         res.setData(null);
-        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
 
 }

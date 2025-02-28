@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,8 +18,10 @@ import com.vn.minh.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Service("userImpl") // Đặt tên bean
 @RequiredArgsConstructor
+@Primary // Bean chính khi có nhiều triển khai UserService
+
 public class UserImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -62,7 +65,6 @@ public class UserImpl implements UserService {
         if (isValidEmail(username)) {
             Optional<User> optional = this.userRepository.findByEmail(username);
             loginUser = optional.isPresent() ? optional.get() : null;
-            
 
         }
         return loginUser;
@@ -72,6 +74,26 @@ public class UserImpl implements UserService {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    @Override
+    public void updateRefreshToken(String username, String token) {
+        User currentUser = this.findByUsername(username);
+        if (currentUser != null) {
+
+            currentUser.setRefreshToken(token);
+            this.userRepository.save(currentUser);
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+    }
+
+    @Override
+    public <T> Optional<T> getUserByRefreshTokenAndEmail(Class<T> type, String email, String refreshToken) {
+        Optional<T> userOpt = this.userRepository.findByEmailAndRefreshToken(type, email, refreshToken);
+
+        return userOpt;
     }
 
 }

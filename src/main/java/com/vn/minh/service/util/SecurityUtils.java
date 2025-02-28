@@ -2,16 +2,15 @@ package com.vn.minh.service.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,57 +32,82 @@ import com.vn.minh.domain.response.ResLoginDTO;
 public class SecurityUtils {
     public static final MacAlgorithm MAC_ALGORITHM = MacAlgorithm.HS512;
 
-    private final JwtEncoder jwtEncoder;
+    private final JwtEncoder accessTokenEncoder;
+    private final JwtEncoder refreshTokenEncoder;
+    private final String jwtKey;
+    private final String refreshJwtKey;
+    private final long accessTokenExpiration;
+    private final long refreshTokenExpiration;
 
-    public SecurityUtils(JwtEncoder jwtEncoder) {
-        this.jwtEncoder = jwtEncoder;
+    public SecurityUtils(
+            @Qualifier("accessTokenEncoder") JwtEncoder accessTokenEncoder,
+            @Qualifier("refreshTokenEncoder") JwtEncoder refreshTokenEncoder,
+            @Value("${minh.jwt.base64.secret}") String jwtKey,
+            @Value("${minh.jwt.base64.secret.refresh}") String refreshJwtKey,
+            @Value("${minh.jwt.access-token.validity.in.seconds}") long accessTokenExpiration,
+            @Value("${minh.jwt.refresh-token.validity.in.seconds}") long refreshTokenExpiration) {
+        this.accessTokenEncoder = accessTokenEncoder;
+        this.refreshTokenEncoder = refreshTokenEncoder;
+        this.jwtKey = jwtKey;
+        this.refreshJwtKey = refreshJwtKey;
+        this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    @Value("${minh.jwt.base64.secret}")
-    private String jwtKey;
-
-    @Value("${minh.jwt.access-token.validity.in.seconds}")
-    private long accessTokenExpiration;
-
-    @Value("${minh.jwt.refresh-token.validity.in.seconds}")
-    private long refreshTokenExpiration;
-
-    private SecretKey getSecretKey() {
+    private SecretKey getAccessTokenSecretKey() {
         byte[] keyBytes = Base64.getDecoder().decode(jwtKey);
         return new SecretKeySpec(keyBytes, 0, keyBytes.length, MAC_ALGORITHM.getName());
+    }
 
+    private SecretKey getRefreshTokenSecretKey() {
+        byte[] keyBytes = Base64.getDecoder().decode(refreshJwtKey);
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, MAC_ALGORITHM.getName());
+    }
+
+    private String createToken(String email, Object userClaim, long expirationSeconds, JwtEncoder encoder) {
+        Instant now = Instant.now();
+        Instant validity = now.plus(expirationSeconds, ChronoUnit.SECONDS);
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(email)
+                .claim("user", userClaim)
+                .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(MAC_ALGORITHM).build();
+        return encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
     public String createAccessToken(String email, ResLoginDTO.UserLogin resLoginDTO) {
-        Instant now = Instant.now();
-        Instant validity = now.plus(accessTokenExpiration, ChronoUnit.SECONDS);
-
-        List<String> listAuthority = new ArrayList<String>();
-
-        JwtClaimsSet claim = JwtClaimsSet.builder()
-                .issuedAt(now)
-                .expiresAt(validity)
-                .subject(email)
-                .claim("user", resLoginDTO)
-                .build();
-
-        JwsHeader jwsHeader = JwsHeader.with(MAC_ALGORITHM).build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claim)).getTokenValue();
+        return createToken(email, resLoginDTO, accessTokenExpiration, accessTokenEncoder);
     }
 
     public String createRefreshToken(String email, ResLoginDTO resLoginDTO) {
-        Instant now = Instant.now();
-        Instant validity = now.plus(refreshTokenExpiration, ChronoUnit.SECONDS);
-        JwtClaimsSet claim = JwtClaimsSet.builder()
-                .issuedAt(now)
-                .expiresAt(validity)
-                .subject(email)
-                .claim("user", resLoginDTO.getUser())
-                .build();
-
-        JwsHeader jwsHeader = JwsHeader.with(MAC_ALGORITHM).build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claim)).getTokenValue();
+        return createToken(email, resLoginDTO.getUser(), refreshTokenExpiration, refreshTokenEncoder);
     }
+
+    public Jwt validateAccessToken(String token) {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getAccessTokenSecretKey())
+                .macAlgorithm(MAC_ALGORITHM).build();
+        try {
+            return jwtDecoder.decode(token);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid access token", e);
+        }
+    }
+
+    public Jwt checkValidRefreshToken(String token) {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getRefreshTokenSecretKey())
+                .macAlgorithm(MAC_ALGORITHM).build();
+        try {
+            return jwtDecoder.decode(token);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid refresh token", e);
+        }
+    }
+
+    // Các hàm tiện ích khác giữ nguyên...
 
     /**
      * Get the login of the current user.
@@ -170,17 +194,4 @@ public class SecurityUtils {
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
     }
 
-    public Jwt checkValidRefreshToken(String token) {
-        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getSecretKey())
-                .macAlgorithm(SecurityUtils.MAC_ALGORITHM).build();
-
-        try {
-            return jwtDecoder.decode(token);
-
-        } catch (Exception e) {
-            System.out.println("gt;gt; Refresh Token Error: " + e);
-
-            throw e;
-        }
-    }
 }

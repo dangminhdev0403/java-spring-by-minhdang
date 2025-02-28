@@ -16,6 +16,8 @@ public class ResLoginDTO {
 
     private UserLogin user;
 
+   
+
     @Getter
     @Setter
     @Builder
@@ -23,6 +25,9 @@ public class ResLoginDTO {
 
         private String name;
         private String email;
+       
+
+
     }
 
 }

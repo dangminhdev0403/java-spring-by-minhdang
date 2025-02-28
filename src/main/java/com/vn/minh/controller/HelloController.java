@@ -3,11 +3,18 @@ package com.vn.minh.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-public class HelloController {
+import com.vn.minh.service.UserService;
 
-    @GetMapping("/user")
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequiredArgsConstructor
+public class HelloController {
+    private final UserService userService;
+
+    @GetMapping("/")
     public String getMethodName() {
+
         return "Hello world";
     }
 

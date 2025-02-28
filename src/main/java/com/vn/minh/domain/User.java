@@ -2,6 +2,7 @@ package com.vn.minh.domain;
 
 import com.vn.minh.domain.impl.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseEntity {
-    
+
+    // ! Quy định cột kiểu mediumtext
+    @Column(columnDefinition = "LONGTEXT")
+    private String refreshToken;
+
     private String email;
     private String password;
 }

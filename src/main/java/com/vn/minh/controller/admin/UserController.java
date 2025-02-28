@@ -32,14 +32,12 @@ public class UserController {
         return ResponseEntity.ok().body(listUsers);
     }
 
-    // @PostMapping("")
-    // public ResponseEntity<LoginRes> postMethodName(@RequestBody User user) {
-    //     User saveUser = this.userService.saveUser(user);
-    //     LoginRes loginRes = LoginRes.builder().id(saveUser.getId()).name(saveUser.getName()).email(saveUser.getEmail())
-    //             .build();
+    @PostMapping("")
+    public ResponseEntity<User> postMethodName(@RequestBody User user) {
+        User saveUser = this.userService.saveUser(user);
 
-    //     return ResponseEntity.created(null).body(loginRes);
-    // }
+        return ResponseEntity.created(null).body(saveUser);
+    }
 
     @PutMapping("/{id}")
     public String updateUser(@PathVariable long id) throws MessageCustomExcetion {

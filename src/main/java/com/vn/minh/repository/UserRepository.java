@@ -9,8 +9,16 @@ import com.vn.minh.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    // projection
     <T> List<T> findAllBy(Class<T> type);
 
+
+    <T> Optional<T> findByEmailAndRefreshToken(Class<T> type, String email, String refreshToken);
+    
+
     Optional<User> findByEmail(String email);
+
+
+
 
 }

@@ -2,8 +2,10 @@ package com.vn.minh.service.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -68,11 +70,18 @@ public class SecurityUtils {
         Instant now = Instant.now();
         Instant validity = now.plus(expirationSeconds, ChronoUnit.SECONDS);
 
+
+        
+        List<String> listAuthority = new ArrayList<String>();
+        listAuthority.add("ROLE_ADMIN_CREATE");
+        listAuthority.add("ROLE_ADMIN_UPDATE");
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
                 .claim("user", userClaim)
+                .claim("permission", 
+                        listAuthority)
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(MAC_ALGORITHM).build();

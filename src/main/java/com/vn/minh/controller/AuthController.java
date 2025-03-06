@@ -24,6 +24,7 @@ import com.vn.minh.service.UserService;
 import com.vn.minh.service.util.SecurityUtils;
 import com.vn.minh.service.util.error.MessageCustomExcetion;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,10 +41,11 @@ public class AuthController {
     private long refreshTokenExpiration;
 
     @PostMapping("/login")
-    public ResponseEntity<ResLoginDTO> login(@RequestBody LoginReq loginReq) {
+    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginReq loginReq ) {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginReq.getEmail(), loginReq.getPassword());
+
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         User currentUser = this.userService.findByUsername(loginReq.getEmail());
@@ -87,6 +89,7 @@ public class AuthController {
             throw new MessageCustomExcetion("Không tìm thấy refresh token");
 
         }
+
         Jwt decodedToken = this.securityUtils.checkValidRefreshToken(refreshToken);
         String email = decodedToken.getSubject();
 

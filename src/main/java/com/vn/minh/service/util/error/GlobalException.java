@@ -1,9 +1,14 @@
 package com.vn.minh.service.util.error;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -89,7 +94,6 @@ public class GlobalException {
         res.setData(null);
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
-    
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ResponseData> notFoundUserException(HttpRequestMethodNotSupportedException ex) {
@@ -99,6 +103,23 @@ public class GlobalException {
         res.setError(("Phương thức sử dụng không "));
         String message = ex.getMessage();
         res.setMessage(message);
+        res.setData(null);
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseData> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        ResponseData res = new ResponseData();
+        int statusCode = HttpStatus.BAD_REQUEST.value();
+        BindingResult result = ex.getBindingResult();
+        List<FieldError> fieldErrors = result.getFieldErrors();
+
+        List<String> error = fieldErrors.stream().map(FieldError::getDefaultMessage).toList();
+
+        res.setStatus(statusCode);
+        res.setError(("Phương thức sử dụng không "));
+
+        res.setMessage(error);
         res.setData(null);
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }

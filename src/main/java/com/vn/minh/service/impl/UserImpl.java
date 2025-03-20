@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -94,6 +96,11 @@ public class UserImpl implements UserService {
         Optional<T> userOpt = this.userRepository.findByEmailAndRefreshToken(type, email, refreshToken);
 
         return userOpt;
+    }
+
+    @Override
+    public Page<User> getListUserWithPageable(Pageable pageable) {
+       return this.userRepository.findAll(pageable);
     }
 
 }

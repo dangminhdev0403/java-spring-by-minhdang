@@ -30,7 +30,7 @@ public class SercurityConfiguration {
                         .anyRequest().authenticated()
 
                 )
-                //! Khai báo JWT
+                // ! Khai báo JWT
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

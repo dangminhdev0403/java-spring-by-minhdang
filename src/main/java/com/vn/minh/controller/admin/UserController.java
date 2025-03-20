@@ -1,9 +1,7 @@
 package com.vn.minh.controller.admin;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vn.minh.domain.User;
+import com.vn.minh.domain.spes.UserSpes;
 import com.vn.minh.service.UserService;
 import com.vn.minh.service.util.error.MessageCustomExcetion;
 
@@ -31,15 +30,19 @@ public class UserController {
 
     @GetMapping("")
     public ResponseEntity<List<User>> getListUserDTOWithPage(
-            @RequestParam("currentPage") Optional<String> currentPage,
-            @RequestParam("pageSize") Optional<String> pageSize) {
+            Pageable pageable,
+            @RequestParam(value = "name", required = false) String name) {
 
-        int page = currentPage.isPresent() ? Integer.parseInt(currentPage.get()) : 0;
-        int size = pageSize.isPresent() ? Integer.parseInt(pageSize.get()) : 10;
-        Pageable pageable = PageRequest.of(page, size);
+        // ! nạp vào Pageable
 
-        
-        List<User> listUser = this.userService.getListUserWithPageable(pageable).getContent();
+        // List<User> listUser = this.userService.getListUser(
+        // User.class, pageable, UserSpes.nameLike(
+        // name))
+        // .getContent();
+
+        @SuppressWarnings("unchecked")
+        List<User> listUser = this.userService.getListUser(pageable,
+                UserSpes.nameLike(name)).getContent();
 
         return ResponseEntity.ok().body(listUser);
     }

@@ -1,6 +1,5 @@
 package com.vn.minh.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,13 +7,13 @@ import java.util.regex.Pattern;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vn.minh.domain.User;
-import com.vn.minh.domain.dto.UserDTO;
 import com.vn.minh.repository.UserRepository;
 import com.vn.minh.service.UserService;
 
@@ -33,9 +32,8 @@ public class UserImpl implements UserService {
     public PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<UserDTO> getListUser() {
-        List<UserDTO> listUsers = this.userRepository.findAllBy(UserDTO.class);
-        return listUsers;
+    public <T> Page<T> getListUser(Class<T> type, Pageable pageable, Specification<User> specification) {
+        return this.userRepository.findAllBy(specification, pageable, type);
     }
 
     @Override
@@ -100,7 +98,12 @@ public class UserImpl implements UserService {
 
     @Override
     public Page<User> getListUserWithPageable(Pageable pageable) {
-       return this.userRepository.findAll(pageable);
+        return this.userRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page getListUser(Pageable pageable, Specification<User> specification) {
+        return this.userRepository.findAll(specification, pageable);
     }
 
 }

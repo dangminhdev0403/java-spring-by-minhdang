@@ -1,19 +1,20 @@
 package com.vn.minh.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.vn.minh.domain.User;
-import com.vn.minh.domain.dto.UserDTO;
 
 public interface UserService {
 
     Page<User> getListUserWithPageable(Pageable pageable);
 
-    List<UserDTO> getListUser();
+    <T> Page<T> getListUser(Class<T> type, Pageable pageable, Specification<User> specification);
+    
+    Page getListUser(Pageable pageable, Specification<User> specification);
 
     User saveUser(User user);
 

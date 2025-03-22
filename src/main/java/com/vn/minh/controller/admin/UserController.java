@@ -47,6 +47,7 @@ public class UserController {
         return ResponseEntity.ok().body(listUser);
     }
 
+    @SuppressWarnings("null")
     @PostMapping("")
     public ResponseEntity<User> postMethodName(@RequestBody User user) {
         User saveUser = this.userService.saveUser(user);

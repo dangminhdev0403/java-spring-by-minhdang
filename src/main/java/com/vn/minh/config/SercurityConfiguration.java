@@ -19,7 +19,9 @@ public class SercurityConfiguration {
     private String[] routeList = { "/", "/auth/**" };
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+            CustomAuthenticationEntryPoint customAuthenticationEntryPoint)
+            throws Exception {
         http
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(authz ->
@@ -31,7 +33,9 @@ public class SercurityConfiguration {
 
                 )
                 // ! Khai báo JWT
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+
                 .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

@@ -72,16 +72,12 @@ public class SecurityUtils {
 
 
         
-        List<String> listAuthority = new ArrayList<String>();
-        listAuthority.add("ROLE_ADMIN_CREATE");
-        listAuthority.add("ROLE_ADMIN_UPDATE");
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
                 .claim("user", userClaim)
-                .claim("permission", 
-                        listAuthority)
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(MAC_ALGORITHM).build();

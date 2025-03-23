@@ -25,7 +25,6 @@ public class Role extends BaseEntity {
     private List<User> users;
 
     public Object stream() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'stream'");
     }
 

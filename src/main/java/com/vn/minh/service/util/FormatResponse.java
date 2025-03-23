@@ -13,7 +13,8 @@ import com.vn.minh.domain.response.ResponseData;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-@RestControllerAdvice   
+@RestControllerAdvice
+@SuppressWarnings({ "null", "rawtypes" })
 public class FormatResponse implements ResponseBodyAdvice {
 
     @Override
@@ -28,7 +29,7 @@ public class FormatResponse implements ResponseBodyAdvice {
             Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int status = servletResponse.getStatus();
-        ResponseData<Object> rs = new ResponseData<Object>();
+        ResponseData<Object> rs = new ResponseData<>();
         rs.setStatus(status);
 
         if (body instanceof String || status >= 400) {

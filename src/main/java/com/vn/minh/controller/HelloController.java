@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class HelloController {
-    private final UserService userService;
 
     @GetMapping("/")
     public String getMethodName() {

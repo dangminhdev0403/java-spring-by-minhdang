@@ -10,10 +10,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.vn.minh.domain.User;
 
+@SuppressWarnings("null")
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     // ! dùng Pageable của Spring cung cấp
-    Page<User> findAll(Specification<User> specification ,Pageable pageable);
+    Page<User> findAll( Specification<User> specification ,Pageable pageable);
 
     // projection
     <T> Page<T> findAllBy(  Specification<User> specification ,Pageable pageable, Class<T> type);

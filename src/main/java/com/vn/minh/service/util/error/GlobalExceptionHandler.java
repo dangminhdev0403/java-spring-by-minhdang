@@ -18,8 +18,9 @@ import com.vn.minh.domain.response.ResponseData;
 @RestControllerAdvice
 @SuppressWarnings("rawtypes")
 
-public class GlobalException {
+public class GlobalExceptionHandler {
 
+    @SuppressWarnings("unchecked")
     private ResponseData createResponseData(int statusCode, String error, String message) {
 
         ResponseData res = new ResponseData();
@@ -58,6 +59,7 @@ public class GlobalException {
         return ResponseEntity.badRequest().body(res);
     }
 
+    @SuppressWarnings("unchecked")
     @ExceptionHandler(NoResourceFoundException.class)
 
     public ResponseEntity<ResponseData> notFoundException(NoResourceFoundException ex) {
@@ -71,6 +73,7 @@ public class GlobalException {
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
 
+    @SuppressWarnings("unchecked")
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ResponseData> notFoundUserException(UsernameNotFoundException ex) {
         ResponseData res = new ResponseData();
@@ -83,6 +86,7 @@ public class GlobalException {
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
 
+    @SuppressWarnings("unchecked")
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ResponseData> notFoundUserException(NullPointerException ex) {
         ResponseData res = new ResponseData();
@@ -95,6 +99,7 @@ public class GlobalException {
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
 
+    @SuppressWarnings("unchecked")
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ResponseData> notFoundUserException(HttpRequestMethodNotSupportedException ex) {
         ResponseData res = new ResponseData();
@@ -107,6 +112,7 @@ public class GlobalException {
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
 
+    @SuppressWarnings("unchecked")
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseData> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
         ResponseData res = new ResponseData();

@@ -13,8 +13,8 @@ public interface UserService {
     Page<User> getListUserWithPageable(Pageable pageable);
 
     <T> Page<T> getListUser(Class<T> type, Pageable pageable, Specification<User> specification);
-    
-    Page getListUser(Pageable pageable, Specification<User> specification);
+
+    Page<User> getListUser(Pageable pageable, Specification<User> specification);
 
     User saveUser(User user);
 

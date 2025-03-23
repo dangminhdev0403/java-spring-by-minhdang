@@ -2,10 +2,8 @@ package com.vn.minh.service.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -69,9 +67,6 @@ public class SecurityUtils {
     private String createToken(String email, Object userClaim, long expirationSeconds, JwtEncoder encoder) {
         Instant now = Instant.now();
         Instant validity = now.plus(expirationSeconds, ChronoUnit.SECONDS);
-
-
-        
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)

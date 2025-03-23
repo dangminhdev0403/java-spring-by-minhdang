@@ -42,8 +42,8 @@ public class UserImpl implements UserService {
             String hashPass = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashPass);
         }
-        User current = this.userRepository.save(user);
-        return current;
+        return this.userRepository.save(user);
+        
     }
 
     @Override
@@ -91,9 +91,9 @@ public class UserImpl implements UserService {
 
     @Override
     public <T> Optional<T> getUserByRefreshTokenAndEmail(Class<T> type, String email, String refreshToken) {
-        Optional<T> userOpt = this.userRepository.findByEmailAndRefreshToken(type, email, refreshToken);
+      return  this.userRepository.findByEmailAndRefreshToken(type, email, refreshToken);
 
-        return userOpt;
+         
     }
 
     @Override
@@ -101,6 +101,7 @@ public class UserImpl implements UserService {
         return this.userRepository.findAll(pageable);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Page getListUser(Pageable pageable, Specification<User> specification) {
         return this.userRepository.findAll(specification, pageable);

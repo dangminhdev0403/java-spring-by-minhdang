@@ -1,5 +1,6 @@
 package com.vn.minh.controller.admin;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.vn.minh.domain.User;
 import com.vn.minh.domain.spes.UserSpes;
@@ -40,7 +42,6 @@ public class UserController {
         // name))
         // .getContent();
 
-        @SuppressWarnings("unchecked")
         List<User> listUser = this.userService.getListUser(pageable,
                 UserSpes.nameLike(name)).getContent();
 
@@ -51,8 +52,12 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<User> postMethodName(@RequestBody User user) {
         User saveUser = this.userService.saveUser(user);
-
-        return ResponseEntity.created(null).body(saveUser);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(saveUser.getId()) // Giả sử User có phương thức getId()
+                .toUri();
+        return ResponseEntity.created(location).body(saveUser);
     }
 
     @PutMapping("/{id}")

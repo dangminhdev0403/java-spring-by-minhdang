@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.vn.minh.domain.User;
+import com.vn.minh.domain.model.User;
 
 @SuppressWarnings("null")
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {

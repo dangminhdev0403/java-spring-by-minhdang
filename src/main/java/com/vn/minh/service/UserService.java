@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.vn.minh.domain.User;
+import com.vn.minh.domain.model.User;
 
 public interface UserService {
 

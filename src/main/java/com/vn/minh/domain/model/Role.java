@@ -1,4 +1,4 @@
-package com.vn.minh.domain;
+package com.vn.minh.domain.model;
 
 import java.util.List;
 

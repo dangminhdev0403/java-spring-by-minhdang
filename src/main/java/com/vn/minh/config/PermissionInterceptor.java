@@ -7,8 +7,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vn.minh.domain.Role;
-import com.vn.minh.domain.User;
+import com.vn.minh.domain.model.Role;
+import com.vn.minh.domain.model.User;
 import com.vn.minh.domain.response.ResponseData;
 import com.vn.minh.service.UserService;
 import com.vn.minh.service.util.SecurityUtils;

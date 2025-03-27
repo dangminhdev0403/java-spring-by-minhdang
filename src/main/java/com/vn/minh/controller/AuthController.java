@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vn.minh.domain.User;
+import com.vn.minh.domain.model.User;
 import com.vn.minh.domain.request.LoginReq;
 import com.vn.minh.domain.response.ResLoginDTO;
 import com.vn.minh.service.UserService;

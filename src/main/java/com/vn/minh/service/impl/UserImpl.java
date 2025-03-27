@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.vn.minh.domain.User;
+import com.vn.minh.domain.model.User;
 import com.vn.minh.repository.UserRepository;
 import com.vn.minh.service.UserService;
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.vn.minh.domain.User;
+import com.vn.minh.domain.model.User;
 import com.vn.minh.domain.spes.UserSpes;
 import com.vn.minh.service.UserService;
 import com.vn.minh.service.util.error.MessageCustomExcetion;

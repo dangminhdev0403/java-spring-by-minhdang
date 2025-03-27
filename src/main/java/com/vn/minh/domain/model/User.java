@@ -1,4 +1,4 @@
-package com.vn.minh.domain;
+package com.vn.minh.domain.model;
 
 import com.vn.minh.domain.impl.BaseEntity;
 

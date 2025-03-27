@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
-import com.vn.minh.domain.Role;
+import com.vn.minh.domain.model.Role;
 import com.vn.minh.repository.RoleRepository;
 
 import lombok.RequiredArgsConstructor;

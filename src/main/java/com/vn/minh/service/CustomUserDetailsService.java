@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.vn.minh.domain.User;
+import com.vn.minh.domain.model.User;
 
 import lombok.RequiredArgsConstructor;
 

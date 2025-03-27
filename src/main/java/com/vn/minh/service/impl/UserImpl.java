@@ -43,7 +43,7 @@ public class UserImpl implements UserService {
             user.setPassword(hashPass);
         }
         return this.userRepository.save(user);
-        
+
     }
 
     @Override
@@ -91,9 +91,8 @@ public class UserImpl implements UserService {
 
     @Override
     public <T> Optional<T> getUserByRefreshTokenAndEmail(Class<T> type, String email, String refreshToken) {
-      return  this.userRepository.findByEmailAndRefreshToken(type, email, refreshToken);
+        return this.userRepository.findByEmailAndRefreshToken(type, email, refreshToken);
 
-         
     }
 
     @Override
@@ -101,9 +100,8 @@ public class UserImpl implements UserService {
         return this.userRepository.findAll(pageable);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Page getListUser(Pageable pageable, Specification<User> specification) {
+    public Page<User> getListUser(Pageable pageable, Specification<User> specification) {
         return this.userRepository.findAll(specification, pageable);
     }
 

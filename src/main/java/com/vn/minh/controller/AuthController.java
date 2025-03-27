@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vn.minh.domain.model.ApiDescription;
 import com.vn.minh.domain.model.User;
 import com.vn.minh.domain.request.LoginReq;
 import com.vn.minh.domain.response.ResLoginDTO;
@@ -41,7 +42,9 @@ public class AuthController {
     private long refreshTokenExpiration;
 
     @PostMapping("/login")
-    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginReq loginReq ) {
+    @ApiDescription("Lấy thông tin chi tiết sản phẩm")
+
+    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginReq loginReq) {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginReq.getEmail(), loginReq.getPassword());

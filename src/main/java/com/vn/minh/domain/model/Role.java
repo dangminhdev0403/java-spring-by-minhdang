@@ -5,7 +5,9 @@ import java.util.List;
 import com.vn.minh.domain.impl.BaseEntity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,11 +23,17 @@ import lombok.Setter;
 
 public class Role extends BaseEntity {
 
-    @OneToMany(mappedBy = "role")
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
 
-    public Object stream() {
-        throw new UnsupportedOperationException("Unimplemented method 'stream'");
-    }
+    @ManyToMany
+    @JoinTable(name = "role_permission", // Tên bảng phụ
+            joinColumns = @JoinColumn(name = "role_id"), // Cột khóa ngoại tham chiếu đến Role
+            inverseJoinColumns = @JoinColumn(name = "permission_id") // Cột khóa ngoại tham chiếu đến Permission
+    )
+    private List<Permission> permissions
+
+    ;
 
 }

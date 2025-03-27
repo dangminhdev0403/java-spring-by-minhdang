@@ -1,11 +1,12 @@
 package com.vn.minh.domain.model;
 
+import java.util.List;
+
 import com.vn.minh.domain.impl.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +28,8 @@ public class User extends BaseEntity {
 
     private String email;
     private String password;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Role> roles;
 
 }

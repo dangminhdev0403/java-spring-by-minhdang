@@ -58,14 +58,15 @@ public class DataBaseInitializer implements CommandLineRunner {
             roleRepository.saveAll(roles);
             log.info("Đã khởi tạo thành công {} vai trò.", roles.size());
         } else {
-            log.info("Dữ liệu vai trò đã tồn tại, bỏ qua khởi tạo.");
+            log.info("Data is exists, skip initialization.");
         }
     }
 
     @Transactional
     private void initializePermissions() {
         long countPermission = permissionRepository.count();
-        if (countPermission == 0) {
+        long countEndpoints = handlerMapping.getHandlerMethods().size();
+        if (countPermission == 0 || countPermission != countEndpoints) {
             handlerMapping.getHandlerMethods().entrySet().stream()
                     .flatMap(entry -> {
                         var requestMappingInfo = entry.getKey();
@@ -90,12 +91,13 @@ public class DataBaseInitializer implements CommandLineRunner {
                             permission.getUrl()) == null)
                     .forEach(permission -> {
                         permissionRepository.save(permission);
-                        log.info("Added Permission: {} {}", permission.getMethod(), permission.getUrl());
+                        // log.info("Added Permission: {} {}", permission.getMethod(),
+                        // permission.getUrl());
                     });
 
             log.info("Permissions initialized from endpoints!");
         } else {
-            log.info("Dữ liệu quyền đã tồn tại, bỏ qua khởi tạo.");
+            log.info("Data is exists, skip initialization.");
         }
     }
 }

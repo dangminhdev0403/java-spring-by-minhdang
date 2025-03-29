@@ -21,15 +21,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Permission extends BaseEntity { // Sửa tên lớp
     private String method;
-    private String url;
+    private String path;
 
     @ManyToMany(mappedBy = "permissions")
     private List<Role> roles;
 
-    public Permission(String name, String method, String url) {
+    public Permission(String name, String method, String path) {
         super(name);
         this.method = method;
-        this.url = url;
+        this.path = path;
     }
 
     // Override equals và hashCode để tránh trùng lặp
@@ -39,11 +39,11 @@ public class Permission extends BaseEntity { // Sửa tên lớp
             return true;
         if (!(o instanceof Permission that))
             return false; // Tham chiếu đúng lớp Permission của bạn
-        return method.equals(that.method) && url.equals(that.url);
+        return method.equals(that.method) && path.equals(that.path);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, url);
+        return Objects.hash(method, path);
     }
 }

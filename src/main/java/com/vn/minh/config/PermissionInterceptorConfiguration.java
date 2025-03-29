@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vn.minh.repository.PermissionRepository;
 import com.vn.minh.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,11 @@ import lombok.RequiredArgsConstructor;
 public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
     private final UserService userService;
     private final ObjectMapper objectMapper;
+    private final PermissionRepository permissionRepository;
 
     @Bean
     PermissionInterceptor getPermissionInterceptor() {
-        return new PermissionInterceptor(userService, objectMapper);
+        return new PermissionInterceptor(userService, objectMapper, permissionRepository);
     }
 
     @Override

@@ -87,8 +87,8 @@ public class DataBaseInitializer implements CommandLineRunner {
                                         .map(pattern -> new Permission(apiName, m.name(), pattern.toString())));
                     })
                     .distinct()
-                    .filter(permission -> permissionRepository.findByMethodAndUrl(permission.getMethod(),
-                            permission.getUrl()) == null)
+                    .filter(permission -> permissionRepository.findByMethodAndPath(permission.getMethod(),
+                            permission.getPath()) == null)
                     .forEach(permission -> {
                         permissionRepository.save(permission);
                         // log.info("Added Permission: {} {}", permission.getMethod(),

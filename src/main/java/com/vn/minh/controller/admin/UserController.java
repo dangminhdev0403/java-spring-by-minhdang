@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.vn.minh.domain.model.ApiDescription;
 import com.vn.minh.domain.model.User;
 import com.vn.minh.domain.spes.UserSpes;
 import com.vn.minh.service.UserService;
@@ -31,9 +32,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
+    @ApiDescription(value = "Lay danh sach user")
     public ResponseEntity<List<User>> getListUserDTOWithPage(
             Pageable pageable,
-            @RequestParam(value = "name", required = false) String name) {
+            @RequestParam(value = "name", required = false, defaultValue = "") String name) {
 
         // ! nạp vào Pageable
 
@@ -42,8 +44,7 @@ public class UserController {
         // name))
         // .getContent();
 
-        List<User> listUser = this.userService.getListUser(pageable,
-                UserSpes.nameLike(name)).getContent();
+        List<User> listUser = this.userService.getListUser(pageable, UserSpes.nameLike(name)).getContent();
 
         return ResponseEntity.ok().body(listUser);
     }

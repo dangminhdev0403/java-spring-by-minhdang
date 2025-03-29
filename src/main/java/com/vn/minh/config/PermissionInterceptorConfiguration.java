@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
+@SuppressWarnings("null")
+
 public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
     private final UserService userService;
     private final ObjectMapper objectMapper;
@@ -25,8 +27,9 @@ public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
-        String[] whiteList = { "/**", "/admin/**" };
-        registry.addInterceptor(getPermissionInterceptor()).addPathPatterns(whiteList);
+        registry.addInterceptor(getPermissionInterceptor())
+                .addPathPatterns("/**") // Áp dụng cho tất cả đường dẫn
+                .excludePathPatterns("/public/**", "/login", "/error"); // Ngoại lệ
     }
+
 }
